@@ -1,0 +1,67 @@
+html {
+  font-size: 62.5%;
+}
+
+html,
+body {
+  box-sizing: border-box;
+  margin: 0;
+  width: 100vw;
+  height: 100vh;
+  font-family: "Rubik", sans-serif;
+  background-color: #eef0f4;
+}
+
+input {
+  box-sizing: border-box;
+  font-family: "Rubik", sans-serif;
+  color: #432000;
+  background-color: #dce1eb;
+}
+
+input::placeholder {
+  color: #aaa;
+}
+
+button {
+  color: #fdfdfd;
+  background-color: #ac485a;
+  font-family: "Rubik", sans-serif;
+}
+
+img {
+  width: 100%;
+  height: auto;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.container {
+  max-width: 32rem;
+  padding: 2rem;
+  border: 2px solid #000;
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+.img-container {
+  max-width: 30rem;
+}
+
+.form-input {
+  width: 100%;
+  padding: 1.5rem 1rem;
+  text-align: center;
+  font-size: 2rem;
+  border: none;
+  border-radius: 8px;
+}
