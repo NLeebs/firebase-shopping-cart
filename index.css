@@ -1,5 +1,6 @@
 html {
   font-size: 62.5%;
+  user-select: none;
 }
 
 html,
@@ -10,11 +11,21 @@ body {
   height: 100vh;
   font-family: "Rubik", sans-serif;
   background-color: #eef0f4;
+  color: #432000;
+}
+
+p {
+  flex-grow: 1;
+  text-align: center;
+  font-size: 2rem;
+  padding: 1.5rem 1rem;
+  margin: 0;
 }
 
 input {
   box-sizing: border-box;
   font-family: "Rubik", sans-serif;
+  text-transform: capitalize;
   color: #432000;
   background-color: #dce1eb;
 }
@@ -27,6 +38,11 @@ button {
   color: #fdfdfd;
   background-color: #ac485a;
   font-family: "Rubik", sans-serif;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #432000;
 }
 
 img {
@@ -34,8 +50,35 @@ img {
   height: auto;
 }
 
-.flex-center {
+ul {
+  width: 100%;
+  padding: 0;
+  gap: 1rem;
+  list-style: none;
+}
+
+ul li {
+  flex-grow: 1;
+  background-color: #fffdf8;
+  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.2);
+  padding: 1.5rem 1rem;
+  text-align: center;
+  text-transform: capitalize;
+  font-size: 2rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+ul li:hover {
+  background-color: #ffecc7;
+}
+
+.flex {
   display: flex;
+}
+
+.flex-center {
   justify-content: center;
   align-items: center;
   gap: 1rem;
@@ -43,6 +86,10 @@ img {
 
 .flex-column {
   flex-direction: column;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
 }
 
 .container {

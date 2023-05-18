@@ -3,6 +3,8 @@ import {
   getDatabase,
   ref,
   push,
+  onValue,
+  remove,
 } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
 
 const appSettings = {
@@ -20,18 +22,52 @@ const btnAddCart = document.getElementById("btn-addCart");
 const inputAddCart = document.getElementById("input-addCart");
 const ulShoppingList = document.getElementById("shopping-list");
 
-// Console log when button is pressed
+// General Functions
+const resetInputValue = (input) => {
+  input.value = "";
+};
+
+const appendListItem = (list, listItem) => {
+  const [listItemID, listItemValue] = listItem;
+  const newEl = document.createElement("li");
+  newEl.textContent = `${listItemValue}`;
+  newEl.addEventListener("click", () => {
+    const exactLocationOfItemInDB = ref(database, `items/${listItemID}`);
+    remove(exactLocationOfItemInDB);
+  });
+  list.append(newEl);
+};
+
+const clearShoppingList = () => {
+  ulShoppingList.innerHTML = "";
+};
+
+// Get values from DB
+onValue(itemsInDB, function (snapshot) {
+  if (snapshot.exists()) {
+    clearShoppingList();
+    const databaseItemsArray = Object.entries(snapshot.val());
+
+    console.log(databaseItemsArray);
+
+    for (let i = 0; i < databaseItemsArray.length; i++) {
+      const currentItem = databaseItemsArray[i];
+      appendListItem(ulShoppingList, currentItem);
+    }
+  } else {
+    ulShoppingList.innerHTML = `<p>No items added...</p>`;
+  }
+});
+
+// Event handlers
 const addCartHandler = () => {
   let inputValue = inputAddCart.value;
-  inputAddCart.value = "";
+  resetInputValue(inputAddCart);
+
+  if (!inputValue) return;
 
   // push to database
   push(itemsInDB, inputValue);
-
-  // append to list
-  ulShoppingList.innerHTML += `<li>${inputValue}</li>`;
-
-  console.log(`${inputValue} added to database`);
 };
 
 // Add Event Listners
