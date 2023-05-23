@@ -11,11 +11,23 @@ const appSettings = {
   databaseURL: "https://shopping-list-4dae2-default-rtdb.firebaseio.com/",
 };
 
+// Get elements
+const btnAddCartEl = document.getElementById("btn-addCart");
+const inputAddCartEl = document.getElementById("input-addCart");
+const selectStoreEl = document.getElementById("select-store");
+const aldiShoppingListEl = document.getElementById("aldi-shopping-list");
+
 //Init App
-const storeArr = ["Aldi", "Mediterranean Market", "Kroger", "Giant Eagle"];
 const app = initializeApp(appSettings);
 const database = getDatabase(app);
-const itemsInDB = ref(database, "items");
+
+const storeArr = ["Aldi", "Mediterranean Market", "Kroger", "Giant Eagle"];
+storeArr.forEach((store) => {
+  const newEl = document.createElement("option");
+  newEl.textContent = `${store}`;
+  newEl.setAttribute("value", `${store.replace(" ", "-").toLowerCase()}`);
+  selectStoreEl.append(newEl);
+});
 
 // Create DB references
 const DBRefObject = {};
@@ -23,11 +35,6 @@ storeArr.forEach((store) => {
   const varName = `itemsIn${store.replace(" ", "")}DB`;
   DBRefObject[varName] = ref(database, `items/${store.replace(" ", "-")}`);
 });
-
-// Get elements
-const btnAddCart = document.getElementById("btn-addCart");
-const inputAddCart = document.getElementById("input-addCart");
-const aldiShoppingList = document.getElementById("aldi-shopping-list");
 
 // General Functions
 const resetInputValue = (input) => {
@@ -52,12 +59,12 @@ const clearShoppingLists = (list) => {
 // Get values from DB
 onValue(DBRefObject.itemsInAldiDB, function (snapshot) {
   if (snapshot.exists()) {
-    clearShoppingLists(aldiShoppingList);
+    clearShoppingLists(aldiShoppingListEl);
     const databaseItemsArray = Object.entries(snapshot.val());
 
     for (let i = 0; i < databaseItemsArray.length; i++) {
       const currentItem = databaseItemsArray[i];
-      appendListItem(aldiShoppingList, currentItem);
+      appendListItem(aldiShoppingListEl, currentItem);
     }
   } else {
     ulShoppingList.innerHTML = `<p>No items added...</p>`;
@@ -66,8 +73,8 @@ onValue(DBRefObject.itemsInAldiDB, function (snapshot) {
 
 // Event handlers
 const addCartHandler = () => {
-  let inputValue = inputAddCart.value;
-  resetInputValue(inputAddCart);
+  let inputValue = inputAddCartEl.value;
+  resetInputValue(inputAddCartEl);
 
   if (!inputValue) return;
 
@@ -76,4 +83,4 @@ const addCartHandler = () => {
 };
 
 // Add Event Listners
-btnAddCart.addEventListener("click", addCartHandler);
+btnAddCartEl.addEventListener("click", addCartHandler);
