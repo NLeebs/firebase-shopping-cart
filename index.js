@@ -12,15 +12,22 @@ const appSettings = {
 };
 
 //Init App
+const storeArr = ["Aldi", "Mediterranean Market", "Kroger", "Giant Eagle"];
 const app = initializeApp(appSettings);
 const database = getDatabase(app);
 const itemsInDB = ref(database, "items");
 
-console.log(database);
+// Create DB references
+const DBRefObject = {};
+storeArr.forEach((store) => {
+  const varName = `itemsIn${store.replace(" ", "")}DB`;
+  DBRefObject[varName] = ref(database, `items/${store.replace(" ", "-")}`);
+});
+
 // Get elements
 const btnAddCart = document.getElementById("btn-addCart");
 const inputAddCart = document.getElementById("input-addCart");
-const ulShoppingList = document.getElementById("shopping-list");
+const aldiShoppingList = document.getElementById("aldi-shopping-list");
 
 // General Functions
 const resetInputValue = (input) => {
@@ -38,21 +45,19 @@ const appendListItem = (list, listItem) => {
   list.append(newEl);
 };
 
-const clearShoppingList = () => {
-  ulShoppingList.innerHTML = "";
+const clearShoppingLists = (list) => {
+  list.innerHTML = "";
 };
 
 // Get values from DB
-onValue(itemsInDB, function (snapshot) {
+onValue(DBRefObject.itemsInAldiDB, function (snapshot) {
   if (snapshot.exists()) {
-    clearShoppingList();
+    clearShoppingLists(aldiShoppingList);
     const databaseItemsArray = Object.entries(snapshot.val());
-
-    console.log(databaseItemsArray);
 
     for (let i = 0; i < databaseItemsArray.length; i++) {
       const currentItem = databaseItemsArray[i];
-      appendListItem(ulShoppingList, currentItem);
+      appendListItem(aldiShoppingList, currentItem);
     }
   } else {
     ulShoppingList.innerHTML = `<p>No items added...</p>`;
@@ -67,7 +72,7 @@ const addCartHandler = () => {
   if (!inputValue) return;
 
   // push to database
-  push(itemsInDB, inputValue);
+  push(DBRefObject.itemsInAldiDB, inputValue);
 };
 
 // Add Event Listners
