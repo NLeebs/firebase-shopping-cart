@@ -112,3 +112,7 @@ ul li:hover {
   border: none;
   border-radius: 8px;
 }
+
+select.form-input {
+  border: 1px solid #000;
+}
