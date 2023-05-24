@@ -16,10 +16,6 @@ const btnAddCartEl = document.getElementById("btn-addCart");
 const inputAddCartEl = document.getElementById("input-addCart");
 const selectStoreEl = document.getElementById("select-store");
 const shoppingListEl = document.getElementById("shopping-list");
-const aldiShoppingListEl = document.getElementById("aldi-shopping-list");
-const mMarketShoppingListEl = document.getElementById(
-  "mediterranean-market-shopping-list"
-);
 
 /////////// Init App ///////////
 const app = initializeApp(appSettings);
