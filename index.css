@@ -7,11 +7,11 @@ html,
 body {
   box-sizing: border-box;
   margin: 0;
-  width: 100vw;
-  height: 100vh;
+  padding: 1rem;
   font-family: "Rubik", sans-serif;
   background-color: #eef0f4;
   color: #432000;
+  overflow-y: scroll;
 }
 
 h2 {
@@ -100,6 +100,7 @@ ul li:hover {
 
 .container {
   max-width: 32rem;
+  max-height: 100%;
   padding: 2rem;
   border: 2px solid #000;
   border-radius: 8px;
