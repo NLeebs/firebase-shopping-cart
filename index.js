@@ -93,8 +93,9 @@ onValue(itemsInDB, function (snapshot) {
     clearShoppingLists();
     const storeRoutes = Object.entries(snapshot.val()).map((item) => item[0]);
     const stores = storeRoutes.map((store) => store.replace("-", " "));
+    let index = 0;
 
-    Object.keys(DBRefObject).forEach((DBref, index) => {
+    Object.keys(DBRefObject).forEach((DBref) => {
       onValue(DBRefObject[DBref], function (snapshot) {
         if (snapshot.exists()) {
           const databaseItemsArray = Object.entries(snapshot.val());
@@ -105,6 +106,8 @@ onValue(itemsInDB, function (snapshot) {
             const currentItem = databaseItemsArray[i];
             appendListItem(shoppingListEl, currentItem, storeRoutes[index]);
           }
+
+          index++;
         }
       });
     });
