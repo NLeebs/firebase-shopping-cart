@@ -127,3 +127,8 @@ const addCartHandler = () => {
 
 /////////// Add Event Listners ///////////
 btnAddCartEl.addEventListener("click", addCartHandler);
+inputAddCartEl.addEventListener("keypress", function (e) {
+  if (e.key === "Enter") {
+    addCartHandler();
+  }
+});
