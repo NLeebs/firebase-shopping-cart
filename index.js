@@ -58,13 +58,16 @@ const appendListHeader = (list, header) => {
   list.append(newEl);
 };
 
-const appendListItem = (list, listItem) => {
+const appendListItem = (list, listItem, route) => {
   const [listItemID, listItemValue] = listItem;
   const newEl = document.createElement("li");
   newEl.textContent = `${listItemValue}`;
   // Delete functionality - needs to find path
   newEl.addEventListener("click", () => {
-    const exactLocationOfItemInDB = ref(database, `items/${listItemID}`);
+    const exactLocationOfItemInDB = ref(
+      database,
+      `items/${route}/${listItemID}`
+    );
     remove(exactLocationOfItemInDB);
   });
   list.append(newEl);
@@ -91,17 +94,16 @@ onValue(itemsInDB, function (snapshot) {
     const storeRoutes = Object.entries(snapshot.val()).map((item) => item[0]);
     const stores = storeRoutes.map((store) => store.replace("-", " "));
 
-    Object.keys(DBRefObject).forEach((DBref, i) => {
+    Object.keys(DBRefObject).forEach((DBref, index) => {
       onValue(DBRefObject[DBref], function (snapshot) {
         if (snapshot.exists()) {
-          console.log(DBref);
           const databaseItemsArray = Object.entries(snapshot.val());
 
-          appendListHeader(shoppingListEl, stores[i]);
+          appendListHeader(shoppingListEl, stores[index]);
 
           for (let i = 0; i < databaseItemsArray.length; i++) {
             const currentItem = databaseItemsArray[i];
-            appendListItem(shoppingListEl, currentItem);
+            appendListItem(shoppingListEl, currentItem, storeRoutes[index]);
           }
         }
       });
@@ -111,7 +113,7 @@ onValue(itemsInDB, function (snapshot) {
   }
 });
 
-// Event handlers
+/////////// Event handlers ///////////
 const addCartHandler = () => {
   const inputValue = inputAddCartEl.value;
   resetInputValue(inputAddCartEl);
@@ -124,5 +126,5 @@ const addCartHandler = () => {
   push(DBRefObject[`itemsIn${storeValue}DB`], inputValue);
 };
 
-// Add Event Listners
+/////////// Add Event Listners ///////////
 btnAddCartEl.addEventListener("click", addCartHandler);
