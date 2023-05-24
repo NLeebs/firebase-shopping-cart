@@ -25,7 +25,13 @@ const mMarketShoppingListEl = document.getElementById(
 const app = initializeApp(appSettings);
 const database = getDatabase(app);
 
-const storeArr = ["Aldi", "Mediterranean Market", "Kroger", "Giant Eagle"];
+//Stores
+const storeArr = [
+  "Aldi",
+  "Mediterranean Market",
+  "Kroger",
+  "Giant Eagle",
+].sort();
 storeArr.forEach((store) => {
   const newEl = document.createElement("option");
   newEl.textContent = `${store}`;
@@ -34,24 +40,29 @@ storeArr.forEach((store) => {
 });
 
 /////////// Create DB references ///////////
+const itemsInDB = ref(database, "items");
 const DBRefObject = {};
 storeArr.forEach((store) => {
   const varName = `itemsIn${store.replace(" ", "")}DB`;
   DBRefObject[varName] = ref(database, `items/${store.replace(" ", "-")}`);
 });
-//DBRefObject.storesInDB = ref(database, "items");
-console.log(DBRefObject);
 
 /////////// General Functions ///////////
 const resetInputValue = (input) => {
   input.value = "";
 };
 
+const appendListHeader = (list, header) => {
+  const newEl = document.createElement("h2");
+  newEl.textContent = header;
+  list.append(newEl);
+};
+
 const appendListItem = (list, listItem) => {
   const [listItemID, listItemValue] = listItem;
   const newEl = document.createElement("li");
   newEl.textContent = `${listItemValue}`;
-  // Delete functionality
+  // Delete functionality - needs to find path
   newEl.addEventListener("click", () => {
     const exactLocationOfItemInDB = ref(database, `items/${listItemID}`);
     remove(exactLocationOfItemInDB);
@@ -74,22 +85,30 @@ function storeValueToPath(str) {
 }
 
 /////////// Get values from DB ///////////
-Object.keys(DBRefObject).forEach((DBref) => {
-  onValue(DBRefObject[DBref], function (snapshot) {
-    if (snapshot.exists()) {
-      // clearShoppingLists();
-      const databaseItemsArray = Object.entries(snapshot.val());
-      console.log(databaseItemsArray);
+onValue(itemsInDB, function (snapshot) {
+  if (snapshot.exists()) {
+    clearShoppingLists();
+    const storeRoutes = Object.entries(snapshot.val()).map((item) => item[0]);
+    const stores = storeRoutes.map((store) => store.replace("-", " "));
 
-      for (let i = 0; i < databaseItemsArray.length; i++) {
-        const currentItem = databaseItemsArray[i];
-        console.log(currentItem);
-        appendListItem(shoppingListEl, currentItem);
-      }
-    } else {
-      shoppingListEl.innerHTML = `<p>No items added...</p>`;
-    }
-  });
+    Object.keys(DBRefObject).forEach((DBref, i) => {
+      onValue(DBRefObject[DBref], function (snapshot) {
+        if (snapshot.exists()) {
+          console.log(DBref);
+          const databaseItemsArray = Object.entries(snapshot.val());
+
+          appendListHeader(shoppingListEl, stores[i]);
+
+          for (let i = 0; i < databaseItemsArray.length; i++) {
+            const currentItem = databaseItemsArray[i];
+            appendListItem(shoppingListEl, currentItem);
+          }
+        }
+      });
+    });
+  } else {
+    shoppingListEl.innerHTML = `<p>No items added...</p>`;
+  }
 });
 
 // Event handlers
