@@ -25,6 +25,7 @@ const database = getDatabase(app);
 const storeArr = [
   "Aldi",
   "Mediterranean Market",
+  "Saraga",
   "Kroger",
   "Giant Eagle",
 ].sort();
