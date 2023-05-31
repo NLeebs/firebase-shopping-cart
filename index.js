@@ -25,6 +25,7 @@ const app = initializeApp(appSettings);
 const database = getDatabase(app);
 
 const createSelectOptions = function (arr, selectEl) {
+  arr.sort();
   arr.forEach((option) => {
     const newEl = document.createElement("option");
     newEl.textContent = `${option}`;
@@ -107,14 +108,16 @@ const clearShoppingLists = () => {
   shoppingListEl.innerHTML = "";
 };
 
-function storeValueToPath(str) {
+function dashedFormatToStandard(str, type) {
   const words = str.split("-"); // Split the string into an array of words
   const capitalizedWords = words.map((word) => {
     const firstLetter = word.charAt(0).toUpperCase(); // Get the first letter of each word and capitalize it
     const restOfWord = word.slice(1); // Get the remaining characters of each word
     return `${firstLetter}${restOfWord}`; // Concatenate the capitalized first letter with the rest of the word
   });
-  return capitalizedWords.join(""); // Join the array of capitalized words back into a string
+  if (type === "DB") return capitalizedWords.join("");
+  // Join the array of capitalized words back into a string
+  else return capitalizedWords.join(" ");
 }
 
 /////////// Get values from DB ///////////
@@ -158,27 +161,46 @@ onValue(itemsInDB, function (snapshot) {
 //Add an item or recipe to the cart
 const addCartHandler = () => {
   const inputValue = inputAddCartEl.value;
+  const selectValue = selectRecipeEl.value;
   resetInputValue(inputAddCartEl);
+  resetInputValue(selectRecipeEl);
+  selectValueChangeHandler();
 
-  if (!inputValue) return;
+  if (selectValue === "") {
+    if (!inputValue) return;
 
-  const storeValue = storeValueToPath(selectStoreEl.value);
+    const storeValue = dashedFormatToStandard(selectStoreEl.value, "DB");
 
-  const itemObj = { item: inputValue, type: selectTypeEl.value };
+    const itemObj = { item: inputValue, type: selectTypeEl.value };
 
-  // push to database
-  push(DBRefObject[`itemsIn${storeValue}DB`], itemObj);
+    // push to database
+    push(DBRefObject[`itemsIn${storeValue}DB`], itemObj);
+  } else {
+    const recipeSelected = dashedFormatToStandard(selectValue);
+
+    Object.entries(recipeObj[recipeSelected]).forEach((storeArr) => {
+      const storeValue = storeArr[0].replace(" ", "");
+      const DBRef = `itemsIn${storeValue}DB`;
+      console.log(DBRef);
+
+      storeArr[1].forEach((item) => {
+        push(DBRefObject[DBRef], item);
+      });
+    });
+  }
 };
 
 //Change UI based on recipe selection
 const selectValueChangeHandler = function () {
   if (selectRecipeEl.value !== "") {
     inputAddCartEl.setAttribute("disabled", "");
-    selectStoreEl.setAttribute("disabled", "");
+    inputAddCartEl.classList.add("disabled"),
+      selectStoreEl.setAttribute("disabled", "");
     selectTypeEl.setAttribute("disabled", "");
   } else {
     inputAddCartEl.removeAttribute("disabled");
-    selectStoreEl.removeAttribute("disabled");
+    inputAddCartEl.classList.remove("disabled"),
+      selectStoreEl.removeAttribute("disabled");
     selectTypeEl.removeAttribute("disabled");
   }
 };
