@@ -6,7 +6,7 @@ import {
   onValue,
   remove,
 } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
-// import recipeObj from "./store/recipes.js";
+import recipeObj from "./store/recipes.js";
 
 const appSettings = {
   databaseURL: "https://shopping-list-4dae2-default-rtdb.firebaseio.com/",
@@ -17,6 +17,7 @@ const btnAddCartEl = document.getElementById("btn-addCart");
 const inputAddCartEl = document.getElementById("input-addCart");
 const selectStoreEl = document.getElementById("select-store");
 const selectTypeEl = document.getElementById("select-type");
+const selectRecipeEl = document.getElementById("select-recipe");
 const shoppingListEl = document.getElementById("shopping-list");
 
 /////////// Init App ///////////
@@ -32,6 +33,16 @@ const createSelectOptions = function (arr, selectEl) {
   });
 };
 
+//Stores
+const storeArr = [
+  "Aldi",
+  "Mediterranean Market",
+  "Saraga",
+  "Kroger",
+  "Giant Eagle",
+].sort();
+createSelectOptions(storeArr, selectStoreEl);
+
 //Item Types
 const itemTypes = [
   "Produce",
@@ -45,15 +56,9 @@ const itemTypes = [
 ];
 createSelectOptions(itemTypes, selectTypeEl);
 
-//Stores
-const storeArr = [
-  "Aldi",
-  "Mediterranean Market",
-  "Saraga",
-  "Kroger",
-  "Giant Eagle",
-].sort();
-createSelectOptions(storeArr, selectStoreEl);
+//Recipes
+const recipeNameArr = Object.keys(recipeObj);
+createSelectOptions(recipeNameArr, selectRecipeEl);
 
 /////////// Create DB references ///////////
 const itemsInDB = ref(database, "items");
@@ -150,6 +155,7 @@ onValue(itemsInDB, function (snapshot) {
 });
 
 /////////// Event handlers ///////////
+//Add an item or recipe to the cart
 const addCartHandler = () => {
   const inputValue = inputAddCartEl.value;
   resetInputValue(inputAddCartEl);
@@ -164,6 +170,19 @@ const addCartHandler = () => {
   push(DBRefObject[`itemsIn${storeValue}DB`], itemObj);
 };
 
+//Change UI based on recipe selection
+const selectValueChangeHandler = function () {
+  if (selectRecipeEl.value !== "") {
+    inputAddCartEl.setAttribute("disabled", "");
+    selectStoreEl.setAttribute("disabled", "");
+    selectTypeEl.setAttribute("disabled", "");
+  } else {
+    inputAddCartEl.removeAttribute("disabled");
+    selectStoreEl.removeAttribute("disabled");
+    selectTypeEl.removeAttribute("disabled");
+  }
+};
+
 /////////// Add Event Listners ///////////
 btnAddCartEl.addEventListener("click", addCartHandler);
 inputAddCartEl.addEventListener("keypress", function (e) {
@@ -171,3 +190,4 @@ inputAddCartEl.addEventListener("keypress", function (e) {
     addCartHandler();
   }
 });
+selectRecipeEl.addEventListener("change", selectValueChangeHandler);
