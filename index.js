@@ -6,6 +6,7 @@ import {
   onValue,
   remove,
 } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
+// import recipeObj from "./store/recipes.js";
 
 const appSettings = {
   databaseURL: "https://shopping-list-4dae2-default-rtdb.firebaseio.com/",
@@ -15,11 +16,34 @@ const appSettings = {
 const btnAddCartEl = document.getElementById("btn-addCart");
 const inputAddCartEl = document.getElementById("input-addCart");
 const selectStoreEl = document.getElementById("select-store");
+const selectTypeEl = document.getElementById("select-type");
 const shoppingListEl = document.getElementById("shopping-list");
 
 /////////// Init App ///////////
 const app = initializeApp(appSettings);
 const database = getDatabase(app);
+
+const createSelectOptions = function (arr, selectEl) {
+  arr.forEach((option) => {
+    const newEl = document.createElement("option");
+    newEl.textContent = `${option}`;
+    newEl.setAttribute("value", `${option.replace(" ", "-").toLowerCase()}`);
+    selectEl.append(newEl);
+  });
+};
+
+//Item Types
+const itemTypes = [
+  "Produce",
+  "Sealed",
+  "Protein",
+  "Refridge",
+  "Frozen",
+  "Bread",
+  "Beverage",
+  "Other",
+];
+createSelectOptions(itemTypes, selectTypeEl);
 
 //Stores
 const storeArr = [
@@ -29,12 +53,7 @@ const storeArr = [
   "Kroger",
   "Giant Eagle",
 ].sort();
-storeArr.forEach((store) => {
-  const newEl = document.createElement("option");
-  newEl.textContent = `${store}`;
-  newEl.setAttribute("value", `${store.replace(" ", "-").toLowerCase()}`);
-  selectStoreEl.append(newEl);
-});
+createSelectOptions(storeArr, selectStoreEl);
 
 /////////// Create DB references ///////////
 const itemsInDB = ref(database, "items");
@@ -55,19 +74,28 @@ const appendListHeader = (list, header) => {
   list.append(newEl);
 };
 
-const appendListItem = (list, listItem, route) => {
-  const [listItemID, listItemValue] = listItem;
-  const newEl = document.createElement("li");
-  newEl.textContent = `${listItemValue}`;
-  // Delete functionality - needs to find path
-  newEl.addEventListener("click", () => {
-    const exactLocationOfItemInDB = ref(
-      database,
-      `items/${route}/${listItemID}`
-    );
-    remove(exactLocationOfItemInDB);
+const appendListItems = (list, listItemsArr, route) => {
+  listItemsArr.forEach((listItem) => {
+    const [listItemID, listItemObj] = listItem;
+    const newEl = document.createElement("li");
+    newEl.textContent = `${listItemObj.item}`;
+    newEl.setAttribute("data-type", listItemObj.type);
+    // Delete functionality - needs to find path
+    newEl.addEventListener("click", () => {
+      const exactLocationOfItemInDB = ref(
+        database,
+        `items/${route}/${listItemID}`
+      );
+      remove(exactLocationOfItemInDB);
+    });
+    list.append(newEl);
   });
-  list.append(newEl);
+};
+
+const sortGroceryItemsByType = function (arr) {
+  return arr.sort((a, b) => {
+    return a[1].type.localeCompare(b[1].type);
+  });
 };
 
 const clearShoppingLists = () => {
@@ -99,10 +127,18 @@ onValue(itemsInDB, function (snapshot) {
 
           appendListHeader(shoppingListEl, stores[index]);
 
+          const currentItemArr = [];
           for (let i = 0; i < databaseItemsArray.length; i++) {
             const currentItem = databaseItemsArray[i];
-            appendListItem(shoppingListEl, currentItem, storeRoutes[index]);
+            currentItemArr.push(databaseItemsArray[i]);
           }
+
+          const sortedCurrentItemArr = sortGroceryItemsByType(currentItemArr);
+          appendListItems(
+            shoppingListEl,
+            sortedCurrentItemArr,
+            storeRoutes[index]
+          );
 
           index++;
         }
@@ -122,8 +158,10 @@ const addCartHandler = () => {
 
   const storeValue = storeValueToPath(selectStoreEl.value);
 
+  const itemObj = { item: inputValue, type: selectTypeEl.value };
+
   // push to database
-  push(DBRefObject[`itemsIn${storeValue}DB`], inputValue);
+  push(DBRefObject[`itemsIn${storeValue}DB`], itemObj);
 };
 
 /////////// Add Event Listners ///////////
