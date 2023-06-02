@@ -98,6 +98,14 @@ ul li:hover {
   flex-wrap: wrap;
 }
 
+.w100 {
+  width: 100%;
+}
+
+.w33 {
+  width: 33% !important;
+}
+
 .container {
   max-width: 32rem;
   max-height: 100%;

@@ -4,6 +4,7 @@ import {
   ref,
   push,
   onValue,
+  update,
   remove,
 } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
 import recipeObj from "./store/recipes.js";
@@ -15,6 +16,7 @@ const appSettings = {
 /////////// Get elements ///////////
 const btnAddCartEl = document.getElementById("btn-addCart");
 const inputAddCartEl = document.getElementById("input-addCart");
+const inputAmountEl = document.getElementById("input-amount");
 const selectStoreEl = document.getElementById("select-store");
 const selectTypeEl = document.getElementById("select-type");
 const selectRecipeEl = document.getElementById("select-recipe");
@@ -47,7 +49,7 @@ createSelectOptions(storeArr, selectStoreEl);
 //Item Types
 const itemTypes = [
   "Produce",
-  "Sealed",
+  "Dry Goods",
   "Protein",
   "Refridge",
   "Frozen",
@@ -84,7 +86,9 @@ const appendListItems = (list, listItemsArr, route) => {
   listItemsArr.forEach((listItem) => {
     const [listItemID, listItemObj] = listItem;
     const newEl = document.createElement("li");
-    newEl.textContent = `${listItemObj.item}`;
+    if (listItemObj.amount > 1)
+      newEl.textContent = `${listItemObj.item} x ${listItemObj.amount}`;
+    else newEl.textContent = `${listItemObj.item}`;
     newEl.setAttribute("data-type", listItemObj.type);
     // Delete functionality - needs to find path
     newEl.addEventListener("click", () => {
@@ -92,7 +96,11 @@ const appendListItems = (list, listItemsArr, route) => {
         database,
         `items/${route}/${listItemID}`
       );
-      remove(exactLocationOfItemInDB);
+      if (listItemObj.amount === 1) remove(exactLocationOfItemInDB);
+      else
+        update(exactLocationOfItemInDB, {
+          amount: listItemObj.amount - 1,
+        });
     });
     list.append(newEl);
   });
@@ -108,17 +116,29 @@ const clearShoppingLists = () => {
   shoppingListEl.innerHTML = "";
 };
 
-function dashedFormatToStandard(str, type) {
-  const words = str.split("-"); // Split the string into an array of words
+const capitalizeWord = function (word) {
+  const firstLetter = word.charAt(0).toUpperCase();
+  const restOfWord = word.slice(1);
+  return `${firstLetter}${restOfWord}`;
+};
+
+const capitalizeInputValue = function (value) {
+  const words = value.split(" ");
   const capitalizedWords = words.map((word) => {
-    const firstLetter = word.charAt(0).toUpperCase(); // Get the first letter of each word and capitalize it
-    const restOfWord = word.slice(1); // Get the remaining characters of each word
-    return `${firstLetter}${restOfWord}`; // Concatenate the capitalized first letter with the rest of the word
+    return capitalizeWord(word);
+  });
+  return capitalizedWords.join(" ");
+};
+
+const dashedFormatToStandard = function (str, type) {
+  const words = str.split("-");
+  const capitalizedWords = words.map((word) => {
+    return capitalizeWord(word);
   });
   if (type === "DB") return capitalizedWords.join("");
-  // Join the array of capitalized words back into a string
+  if (type === "route") return capitalizedWords.join("-");
   else return capitalizedWords.join(" ");
-}
+};
 
 /////////// Get values from DB ///////////
 onValue(itemsInDB, function (snapshot) {
@@ -137,7 +157,6 @@ onValue(itemsInDB, function (snapshot) {
 
           const currentItemArr = [];
           for (let i = 0; i < databaseItemsArray.length; i++) {
-            const currentItem = databaseItemsArray[i];
             currentItemArr.push(databaseItemsArray[i]);
           }
 
@@ -157,11 +176,25 @@ onValue(itemsInDB, function (snapshot) {
   }
 });
 
+/////////// Search for same item in same store ///////////
+const sameItemInSameStore = function (DBRef, newItemObj) {
+  let isSame = null;
+  onValue(DBRefObject[DBRef], function (snapshot) {
+    Object.entries(snapshot.val()).forEach((itemObj) => {
+      if (itemObj[1].item === newItemObj.item) {
+        isSame = itemObj[0];
+      }
+    });
+  });
+  return isSame;
+};
+
 /////////// Event handlers ///////////
 //Add an item or recipe to the cart
-const addCartHandler = () => {
-  const inputValue = inputAddCartEl.value;
+const addCartHandler = function () {
+  const inputValue = capitalizeInputValue(inputAddCartEl.value);
   const selectValue = selectRecipeEl.value;
+  const itemAmount = +inputAmountEl.value;
   resetInputValue(inputAddCartEl);
   resetInputValue(selectRecipeEl);
   selectValueChangeHandler();
@@ -170,11 +203,29 @@ const addCartHandler = () => {
     if (!inputValue) return;
 
     const storeValue = dashedFormatToStandard(selectStoreEl.value, "DB");
-
-    const itemObj = { item: inputValue, type: selectTypeEl.value };
+    const storeRoute = dashedFormatToStandard(selectStoreEl.value, "route");
+    const itemObj = {
+      item: inputValue,
+      type: selectTypeEl.value,
+      amount: itemAmount,
+    };
+    const DBRef = `itemsIn${storeValue}DB`;
 
     // push to database
-    push(DBRefObject[`itemsIn${storeValue}DB`], itemObj);
+    const existingItemID = sameItemInSameStore(DBRef, itemObj);
+    if (!existingItemID) {
+      push(DBRefObject[DBRef], itemObj);
+    } else {
+      const updateRef = ref(database, `items/${storeRoute}/${existingItemID}`);
+      let currentAmount;
+      onValue(updateRef, (snapshot) => {
+        const currentObj = Object.entries(snapshot.val());
+        currentAmount = currentObj[0][1];
+      });
+      update(updateRef, {
+        amount: currentAmount + itemAmount,
+      });
+    }
   } else {
     const recipeSelected = dashedFormatToStandard(selectValue);
 
@@ -195,11 +246,15 @@ const selectValueChangeHandler = function () {
   if (selectRecipeEl.value !== "") {
     inputAddCartEl.setAttribute("disabled", "");
     inputAddCartEl.classList.add("disabled"),
+      inputAmountEl.setAttribute("disabled", "");
+    inputAmountEl.classList.add("disabled"),
       selectStoreEl.setAttribute("disabled", "");
     selectTypeEl.setAttribute("disabled", "");
   } else {
     inputAddCartEl.removeAttribute("disabled");
     inputAddCartEl.classList.remove("disabled"),
+      inputAmountEl.removeAttribute("disabled");
+    inputAmountEl.classList.remove("disabled"),
       selectStoreEl.removeAttribute("disabled");
     selectTypeEl.removeAttribute("disabled");
   }
