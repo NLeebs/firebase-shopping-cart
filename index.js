@@ -26,8 +26,9 @@ const shoppingListEl = document.getElementById("shopping-list");
 const app = initializeApp(appSettings);
 const database = getDatabase(app);
 
-const createSelectOptions = function (arr, selectEl) {
+const createSelectOptions = function (arr, selectEl, isTypes) {
   arr.sort();
+  if (isTypes) arr.push("Other");
   arr.forEach((option) => {
     const newEl = document.createElement("option");
     newEl.textContent = `${option}`;
@@ -50,14 +51,14 @@ createSelectOptions(storeArr, selectStoreEl);
 const itemTypes = [
   "Produce",
   "Dry Goods",
+  "Bottled",
   "Protein",
   "Refridge",
   "Frozen",
   "Bread",
   "Beverage",
-  "Other",
 ];
-createSelectOptions(itemTypes, selectTypeEl);
+createSelectOptions(itemTypes, selectTypeEl, true);
 
 //Recipes
 const recipeNameArr = Object.keys(recipeObj);
