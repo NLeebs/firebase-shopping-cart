@@ -74,7 +74,10 @@ storeArr.forEach((store) => {
 
 /////////// General Functions ///////////
 const resetInputValue = (input) => {
-  input.value = "";
+  const inputID = input.getAttribute("id");
+  if (inputID === "input-addCart" || inputID === "select-recipe")
+    input.value = "";
+  if (inputID === "input-amount") input.value = 1;
 };
 
 const appendListHeader = (list, header) => {
@@ -197,6 +200,7 @@ const addCartHandler = function () {
   const selectValue = selectRecipeEl.value;
   const itemAmount = +inputAmountEl.value;
   resetInputValue(inputAddCartEl);
+  resetInputValue(inputAmountEl);
   resetInputValue(selectRecipeEl);
   selectValueChangeHandler();
 
