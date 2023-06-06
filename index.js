@@ -174,7 +174,6 @@ onValue(itemsInDB, function (snapshot) {
             currentItemArr.push(databaseItemsArray[i]);
           }
 
-          console.log(currentItemArr);
           const sortedCurrentItemArr = sortGroceryItemsByType(currentItemArr);
           appendListItems(
             shoppingListEl,
@@ -195,11 +194,13 @@ onValue(itemsInDB, function (snapshot) {
 const sameItemInSameStore = function (DBRef, newItemObj) {
   let isSame = null;
   onValue(DBRefObject[DBRef], function (snapshot) {
-    Object.entries(snapshot.val()).forEach((itemObj) => {
-      if (itemObj[1].item === newItemObj.item) {
-        isSame = itemObj[0];
-      }
-    });
+    if (snapshot.exists()) {
+      Object.entries(snapshot.val()).forEach((itemObj) => {
+        if (itemObj[1].item === newItemObj.item) {
+          isSame = itemObj[0];
+        }
+      });
+    }
   });
   return isSame;
 };
@@ -229,9 +230,7 @@ const addCartHandler = function () {
 
     // push to database
     const existingItemID = sameItemInSameStore(DBRef, itemObj);
-    if (!existingItemID) {
-      push(DBRefObject[DBRef], itemObj);
-    } else {
+    if (existingItemID) {
       const updateRef = ref(database, `items/${storeRoute}/${existingItemID}`);
       let currentAmount;
       onValue(updateRef, (snapshot) => {
@@ -242,13 +241,15 @@ const addCartHandler = function () {
         amount: currentAmount + itemAmount,
       });
     }
+    if (!existingItemID) {
+      push(DBRefObject[DBRef], itemObj);
+    }
   } else {
     const recipeSelected = dashedFormatToStandard(selectValue);
 
     Object.entries(recipeObj[recipeSelected]).forEach((storeArr) => {
       const storeValue = storeArr[0].replace(" ", "");
       const DBRef = `itemsIn${storeValue}DB`;
-      console.log(DBRef);
 
       storeArr[1].forEach((item) => {
         push(DBRefObject[DBRef], item);

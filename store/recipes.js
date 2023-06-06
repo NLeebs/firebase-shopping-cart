@@ -17,3 +17,13 @@ const recipeObj = {
 };
 
 export default recipeObj;
+
+/*
+
+"item": {".validate" : "true"},
+        "type": {".validate" : "true"},
+        "amount": {".validate" : "true"},
+        "$other": {".validate" : "false"},
+
+
+*/
