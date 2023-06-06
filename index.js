@@ -27,7 +27,7 @@ const app = initializeApp(appSettings);
 const database = getDatabase(app);
 
 const createSelectOptions = function (arr, selectEl, isTypes) {
-  arr.sort();
+  if (!isTypes) arr.sort();
   if (isTypes) arr.push("Other");
   arr.forEach((option) => {
     const newEl = document.createElement("option");
@@ -37,7 +37,7 @@ const createSelectOptions = function (arr, selectEl, isTypes) {
   });
 };
 
-//Stores
+//Stores - Add or change here
 const storeArr = [
   "Aldi",
   "Mediterranean Market",
@@ -47,15 +47,13 @@ const storeArr = [
 ].sort();
 createSelectOptions(storeArr, selectStoreEl);
 
-//Item Types
+//Item Types -  Add or change here
 const itemTypes = [
   "Produce",
   "Dry Goods",
-  "Bottled",
-  "Protein",
+  "Baked Goods",
   "Refridge",
   "Frozen",
-  "Bread",
   "Beverage",
 ];
 createSelectOptions(itemTypes, selectTypeEl, true);
@@ -112,7 +110,19 @@ const appendListItems = (list, listItemsArr, route) => {
 
 const sortGroceryItemsByType = function (arr) {
   return arr.sort((a, b) => {
-    return a[1].type.localeCompare(b[1].type);
+    const customOrder = [
+      "produce",
+      "dry-goods",
+      "baked-goods",
+      "refridge",
+      "frozen",
+      "beverage",
+      "other",
+    ];
+    const indexA = customOrder.indexOf(a[1].type);
+    const indexB = customOrder.indexOf(b[1].type);
+
+    return indexA - indexB;
   });
 };
 
@@ -164,6 +174,7 @@ onValue(itemsInDB, function (snapshot) {
             currentItemArr.push(databaseItemsArray[i]);
           }
 
+          console.log(currentItemArr);
           const sortedCurrentItemArr = sortGroceryItemsByType(currentItemArr);
           appendListItems(
             shoppingListEl,
