@@ -228,7 +228,7 @@ const addCartHandler = function () {
     };
     const DBRef = `itemsIn${storeValue}DB`;
 
-    // push to database
+    // push to database -- ADD FUNCTIONALITY TO RECIPES
     const existingItemID = sameItemInSameStore(DBRef, itemObj);
     if (existingItemID) {
       const updateRef = ref(database, `items/${storeRoute}/${existingItemID}`);
@@ -249,13 +249,41 @@ const addCartHandler = function () {
 
     Object.entries(recipeObj[recipeSelected]).forEach((storeArr) => {
       const storeValue = storeArr[0].replace(" ", "");
+
+      const storeRoute = storeArr[0].replace(" ", "-");
       const DBRef = `itemsIn${storeValue}DB`;
 
-      storeArr[1].forEach((item) => {
-        push(DBRefObject[DBRef], item);
+      storeArr[1].forEach((itemObj) => {
+        const existingItemID = sameItemInSameStore(DBRef, itemObj);
+        console.log(existingItemID);
+
+        if (existingItemID) {
+          const updateRef = ref(
+            database,
+            `items/${storeRoute}/${existingItemID}`
+          );
+
+          const currentAmount = getCurrentItemAmount(updateRef);
+          console.log(currentAmount, itemObj.amount);
+          update(updateRef, {
+            amount: currentAmount + itemObj.amount,
+          });
+        }
+        if (!existingItemID) {
+          push(DBRefObject[DBRef], itemObj);
+        }
       });
     });
   }
+};
+
+const getCurrentItemAmount = function (updateRef) {
+  let currentAmount;
+  onValue(updateRef, (snapshot) => {
+    const currentObj = Object.entries(snapshot.val());
+    currentAmount = currentObj[0][1];
+  });
+  return currentAmount;
 };
 
 //Change UI based on recipe selection
