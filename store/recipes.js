@@ -48,6 +48,14 @@ const recipeObj = {
       { item: "Shredded Cheese", type: "refridge", amount: 1 },
     ],
   },
+  "Yogurt Goo Bowl": {
+    Aldi: [
+      { item: "Greek Yogurt", type: "refridge", amount: 2 },
+      { item: "Frozen Berries", type: "frozen", amount: 3 },
+      { item: "Granola", type: "dry-goods", amount: 1 },
+      { item: "Peanut Butter", type: "dry-goods", amount: 1 },
+    ],
+  },
 };
 
 export default recipeObj;

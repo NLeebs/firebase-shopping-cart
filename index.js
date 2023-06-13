@@ -32,7 +32,7 @@ const createSelectOptions = function (arr, selectEl, isTypes) {
   arr.forEach((option) => {
     const newEl = document.createElement("option");
     newEl.textContent = `${option}`;
-    newEl.setAttribute("value", `${option.replace(" ", "-").toLowerCase()}`);
+    newEl.setAttribute("value", `${option.replaceAll(" ", "-").toLowerCase()}`);
     selectEl.append(newEl);
   });
 };
@@ -146,6 +146,7 @@ const capitalizeInputValue = function (value) {
 
 const dashedFormatToStandard = function (str, type) {
   const words = str.split("-");
+  console.log(words);
   const capitalizedWords = words.map((word) => {
     return capitalizeWord(word);
   });
@@ -246,12 +247,12 @@ const addCartHandler = function () {
     }
   } else {
     const recipeSelected = dashedFormatToStandard(selectValue);
-
+    console.log(recipeSelected);
+    console.log(selectValue);
     Object.entries(recipeObj[recipeSelected]).forEach((storeArr) => {
-      const storeValue = storeArr[0].replace(" ", "");
-
-      const storeRoute = storeArr[0].replace(" ", "-");
+      const storeValue = storeArr[0].replaceAll(" ", "");
       const DBRef = `itemsIn${storeValue}DB`;
+      const storeRoute = storeArr[0].replaceAll(" ", "-");
 
       storeArr[1].forEach((itemObj) => {
         const existingItemID = sameItemInSameStore(DBRef, itemObj);
