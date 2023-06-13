@@ -255,7 +255,6 @@ const addCartHandler = function () {
 
       storeArr[1].forEach((itemObj) => {
         const existingItemID = sameItemInSameStore(DBRef, itemObj);
-        console.log(existingItemID);
 
         if (existingItemID) {
           const updateRef = ref(
@@ -264,7 +263,6 @@ const addCartHandler = function () {
           );
 
           const currentAmount = getCurrentItemAmount(updateRef);
-          console.log(currentAmount, itemObj.amount);
           update(updateRef, {
             amount: currentAmount + itemObj.amount,
           });

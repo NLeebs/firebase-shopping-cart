@@ -22,12 +22,30 @@ const recipeObj = {
     ],
     "Mediterranean Market": [{ item: "Tahini", type: "dry-goods", amount: 1 }],
   },
+  "Protein Oatmeal": {
+    Aldi: [
+      { item: "Traditional Oats", type: "dry-goods", amount: 1 },
+      { item: "Eggs", type: "refridge", amount: 1 },
+      { item: "Egg Whites", type: "refridge", amount: 1 },
+      { item: "Bananas", type: "produce", amount: 2 },
+    ],
+  },
   "Standard Veggies": {
     Aldi: [
       { item: "Celery", type: "produce", amount: 1 },
       { item: "Onion", type: "produce", amount: 1 },
       { item: "Carrots", type: "produce", amount: 1 },
       { item: "Cabbage", type: "produce", amount: 1 },
+    ],
+  },
+  "Taco Bowl": {
+    Aldi: [
+      { item: "Rice", type: "dry-goods", amount: 1 },
+      { item: "Tortillas", type: "dry-goods", amount: 1 },
+      { item: "Jalepenos", type: "produce", amount: 1 },
+      { item: "Ground Turkey", type: "refridge", amount: 1 },
+      { item: "Sour Cream", type: "refridge", amount: 1 },
+      { item: "Shredded Cheese", type: "refridge", amount: 1 },
     ],
   },
 };
