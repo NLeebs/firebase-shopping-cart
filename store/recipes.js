@@ -30,6 +30,17 @@ const recipeObj = {
     ],
     "Mediterranean Market": [{ item: "Tahini", type: "dry-goods", amount: 1 }],
   },
+  "Pesto": {
+    Aldi: [
+      { item: "Basil", type: "produce", amount: 1 },
+      { item: "Garlic", type: "produce", amount: 1 },
+      { item: "Cashews", type: "dry-goods", amount: 1 },
+      { item: "Olive Oil", type: "dry-goods", amount: 1 },
+      { item: "Lemon Juice", type: "dry-goods", amount: 1 },
+      { item: "Noodles", type: "dry-goods", amount: 1 },
+      { item: "Parmesan Cheese", type: "refridge", amount: 1 },
+    ],
+  },
   "Protein Oatmeal": {
     Aldi: [
       { item: "Traditional Oats", type: "dry-goods", amount: 1 },
