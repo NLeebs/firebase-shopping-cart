@@ -49,10 +49,22 @@ const recipeObj = {
       { item: "Bananas", type: "produce", amount: 2 },
     ],
   },
+  "Salsa": {
+    Aldi: [
+      { item: "Tomatoes", type: "produce", amount: 1 },
+      { item: "Onions", type: "produce", amount: 1 },
+      { item: "Garlic", type: "produce", amount: 1 },
+      { item: "Peppers", type: "produce", amount: 1 },
+    ],
+    "Saraga": [
+      { item: "Cilantro", type: "produce", amount: 1 },
+      { item: "Lemon Juice", type: "dry-goods", amount: 1 },
+    ],
+  },
   "Standard Veggies": {
     Aldi: [
       { item: "Celery", type: "produce", amount: 1 },
-      { item: "Onion", type: "produce", amount: 1 },
+      { item: "Onions", type: "produce", amount: 1 },
       { item: "Carrots", type: "produce", amount: 1 },
       { item: "Cabbage", type: "produce", amount: 1 },
     ],
