@@ -13,6 +13,14 @@ const recipeObj = {
       { item: "Vinegar", type: "dry-goods", amount: 1 },
     ],
   },
+  "Collard Greens": {
+    Aldi: [
+      { item: "Bacon", type: "refridge", amount: 1 },
+      { item: "Broth", type: "dry-goods", amount: 1 },
+      { item: "Onions", type: "produce", amount: 1 },
+      { item: "Garlic", type: "produce", amount: 1 },
+    ],
+  },
   Hummus: {
     Aldi: [
       { item: "Olive Oil", type: "dry-goods", amount: 1 },
