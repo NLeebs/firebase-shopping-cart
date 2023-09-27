@@ -19,6 +19,17 @@ const recipeObj = {
       { item: "Whole Chicken", type: "refridge", amount: 1 },
     ],
   },
+  "Butternut Squash": {
+    Aldi: [
+      { item: "Butternut Squash", type: "produce", amount: 1 },
+      { item: "Onions", type: "produce", amount: 1 },
+      { item: "Celery", type: "produce", amount: 1 },
+      { item: "Carrots", type: "produce", amount: 1 },
+      { item: "Sweet Potatoes", type: "produce", amount: 1 },
+      { item: "Chicken Stock", type: "dry-goods", amount: 1 },
+      { item: "Butter", type: "refridge", amount: 1 },
+    ],
+  },
   "Collard Greens": {
     Aldi: [
       { item: "Bacon", type: "refridge", amount: 1 },
