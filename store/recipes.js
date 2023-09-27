@@ -1,3 +1,5 @@
+// NOTES: Do not Capitalize anything besides first letter of each word
+
 const recipeObj = {
   "Abodo Chicken": {
     Aldi: [
@@ -49,7 +51,7 @@ const recipeObj = {
       { item: "Tahini", type: "dry-goods", amount: 1 }
     ],
   },
-  "NOLA Shrimp Boil": {
+  "Nola Shrimp Boil": {
     Aldi: [
       { item: "Mushrooms", type: "produce", amount: 2 },
       { item: "Onions", type: "produce", amount: 1 },
@@ -61,7 +63,7 @@ const recipeObj = {
       { item: "Seasoning Salt", type: "dry-goods", amount: 1 },
       { item: "Butter", type: "refridge", amount: 1 },
       { item: "Sausage", type: "refridge", amount: 2 },
-      { item: "Corn on Cob", type: "frozen", amount: 2 },
+      { item: "Corn on Cob", type: "frozen", amount: 1 },
     ],
     "Mediterranean Market": [
       { item: "Paprika", type: "dry-goods", amount: 1 },

@@ -146,7 +146,6 @@ const capitalizeInputValue = function (value) {
 
 const dashedFormatToStandard = function (str, type) {
   const words = str.split("-");
-  console.log(words);
   const capitalizedWords = words.map((word) => {
     return capitalizeWord(word);
   });
