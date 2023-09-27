@@ -13,6 +13,12 @@ const recipeObj = {
       { item: "Vinegar", type: "dry-goods", amount: 1 },
     ],
   },
+  "Buttermilk Chicken": {
+    Aldi: [
+      { item: "Buttermilk", type: "refridge", amount: 1 },
+      { item: "Whole Chicken", type: "refridge", amount: 1 },
+    ],
+  },
   "Collard Greens": {
     Aldi: [
       { item: "Bacon", type: "refridge", amount: 1 },
@@ -29,6 +35,14 @@ const recipeObj = {
       { item: "Chickpeas", type: "dry-goods", amount: 2 },
     ],
     "Mediterranean Market": [{ item: "Tahini", type: "dry-goods", amount: 1 }],
+  },
+  "Persian Crusted Rice": {
+    Aldi: [
+      { item: "Rice", type: "dry-goods", amount: 1 },
+      { item: "Canola Oil", type: "dry-goods", amount: 1 },
+      { item: "Butter", type: "refridge", amount: 1 },
+      { item: "Greek Yogurt", type: "refridge", amount: 1 },
+    ],
   },
   "Pesto": {
     Aldi: [
