@@ -34,7 +34,36 @@ const recipeObj = {
       { item: "Garlic", type: "produce", amount: 1 },
       { item: "Chickpeas", type: "dry-goods", amount: 2 },
     ],
-    "Mediterranean Market": [{ item: "Tahini", type: "dry-goods", amount: 1 }],
+    "Mediterranean Market": [
+      { item: "Tahini", type: "dry-goods", amount: 1 }
+    ],
+  },
+  "NOLA Shrimp Boil": {
+    Aldi: [
+      { item: "Mushrooms", type: "produce", amount: 2 },
+      { item: "Onions", type: "produce", amount: 1 },
+      { item: "Garlic", type: "produce", amount: 1 },
+      { item: "Potatoes", type: "produce", amount: 1 },
+      { item: "Garlic Powder", type: "dry-goods", amount: 1 },
+      { item: "Onion Powder", type: "dry-goods", amount: 1 },
+      { item: "Red Pepper Flakes", type: "dry-goods", amount: 1 },
+      { item: "Seasoning Salt", type: "dry-goods", amount: 1 },
+      { item: "Butter", type: "refridge", amount: 1 },
+      { item: "Sausage", type: "refridge", amount: 2 },
+      { item: "Corn on Cob", type: "frozen", amount: 2 },
+    ],
+    "Mediterranean Market": [
+      { item: "Paprika", type: "dry-goods", amount: 1 },
+      { item: "Black Pepper", type: "dry-goods", amount: 1 },
+      { item: "Oregano", type: "dry-goods", amount: 1 },
+      { item: "Thyme", type: "dry-goods", amount: 1 },
+      { item: "Cayenne Pepper", type: "dry-goods", amount: 1 },
+    ],
+    "Saraga": [
+      { item: "Lemons", type: "produce", amount: 3 },
+      { item: "Oranges", type: "produce", amount: 3 },
+      { item: "Shrimp", type: "refridge", amount: 2 },
+    ],
   },
   "Persian Crusted Rice": {
     Aldi: [
