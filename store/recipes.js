@@ -19,7 +19,7 @@ const recipeObj = {
       { item: "Whole Chicken", type: "refridge", amount: 1 },
     ],
   },
-  "Butternut Squash": {
+  "Butternut Squash Soup": {
     Aldi: [
       { item: "Butternut Squash", type: "produce", amount: 1 },
       { item: "Onions", type: "produce", amount: 1 },
