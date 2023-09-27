@@ -65,6 +65,18 @@ const recipeObj = {
       { item: "Shrimp", type: "refridge", amount: 2 },
     ],
   },
+  "Peanut Sauce": {
+    Aldi: [
+      { item: "Ginger", type: "produce", amount: 1 },
+      { item: "Garlic", type: "produce", amount: 1 },
+      { item: "Peanut Butter", type: "dry-goods", amount: 1 },
+      { item: "Brown Sugar", type: "dry-goods", amount: 1 },
+    ],
+    Saraga: [
+      { item: "Soy Sauce", type: "dry-goods", amount: 1 },
+      { item: "Lime Juice", type: "dry-goods", amount: 1 },
+    ],
+  },
   "Persian Crusted Rice": {
     Aldi: [
       { item: "Rice", type: "dry-goods", amount: 1 },
