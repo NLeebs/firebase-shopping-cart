@@ -246,8 +246,6 @@ const addCartHandler = function () {
     }
   } else {
     const recipeSelected = dashedFormatToStandard(selectValue);
-    console.log(recipeSelected);
-    console.log(selectValue);
     Object.entries(recipeObj[recipeSelected]).forEach((storeArr) => {
       const storeValue = storeArr[0].replaceAll(" ", "");
       const DBRef = `itemsIn${storeValue}DB`;
