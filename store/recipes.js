@@ -147,6 +147,18 @@ const recipeObj = {
       { item: "Shredded Cheese", type: "refridge", amount: 1 },
     ],
   },
+  "Turkey Chili": {
+    Aldi: [
+      { item: "Chili Beans", type: "dry-goods", amount: 4 },
+      { item: "Diced Tomatoes", type: "dry-goods", amount: 2 },
+      { item: "Chili Spices", type: "dry-goods", amount: 1 },
+      { item: "Zucchini", type: "produce", amount: 1 },
+      { item: "Carrots", type: "produce", amount: 1 },
+      { item: "Spinach", type: "produce", amount: 1 },
+      { item: "Butternut Squash", type: "produce", amount: 1 },
+      { item: "Ground Turkey", type: "refridge", amount: 1 },
+    ],
+  },
   "Yogurt Goo Bowl": {
     Aldi: [
       { item: "Greek Yogurt", type: "refridge", amount: 2 },
