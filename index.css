@@ -136,6 +136,22 @@ select.form-input {
   border: 1px solid #000;
 }
 
+.btn-undo {
+  background-color: #5a6e8a;
+  font-size: 1.6rem;
+  padding: 1rem;
+  margin-top: 2rem;
+  transition: background-color 0.2s ease, opacity 0.2s ease;
+}
+
+.btn-undo:hover:not(:disabled) {
+  background-color: #3d4f66;
+}
+
+.btn-undo:disabled {
+  cursor: not-allowed;
+}
+
 .disabled {
   opacity: 0.4;
 }

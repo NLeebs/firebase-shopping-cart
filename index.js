@@ -6,6 +6,7 @@ import {
   onValue,
   update,
   remove,
+  set,
 } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
 import recipeObj from "./store/recipes.js";
 
@@ -15,6 +16,7 @@ const appSettings = {
 
 /////////// Get elements ///////////
 const btnAddCartEl = document.getElementById("btn-addCart");
+const btnUndoEl = document.getElementById("btn-undo");
 const inputAddCartEl = document.getElementById("input-addCart");
 const inputAmountEl = document.getElementById("input-amount");
 const selectStoreEl = document.getElementById("select-store");
@@ -95,15 +97,26 @@ const appendListItems = (list, listItemsArr, route) => {
     newEl.setAttribute("data-type", listItemObj.type);
     // Delete functionality - needs to find path
     newEl.addEventListener("click", () => {
-      const exactLocationOfItemInDB = ref(
-        database,
-        `items/${route}/${listItemID}`
-      );
-      if (listItemObj.amount === 1) remove(exactLocationOfItemInDB);
-      else
+      const itemPath = `items/${route}/${listItemID}`;
+      const exactLocationOfItemInDB = ref(database, itemPath);
+
+      if (listItemObj.amount === 1) {
+        pushToUndoHistory({
+          type: "remove",
+          path: itemPath,
+          itemData: { ...listItemObj },
+        });
+        remove(exactLocationOfItemInDB);
+      } else {
+        pushToUndoHistory({
+          type: "decrement",
+          path: itemPath,
+          previousAmount: listItemObj.amount,
+        });
         update(exactLocationOfItemInDB, {
           amount: listItemObj.amount - 1,
         });
+      }
     });
     list.append(newEl);
   });
@@ -154,6 +167,44 @@ const dashedFormatToStandard = function (str, type) {
   if (type === "route") return capitalizedWords.join("-");
   else return capitalizedWords.join(" ");
 };
+
+/////////// Undo History ///////////
+const MAX_UNDO_HISTORY = 10;
+const undoHistory = [];
+
+const updateUndoButton = () => {
+  const isEmpty = undoHistory.length === 0;
+  btnUndoEl.disabled = isEmpty;
+  btnUndoEl.classList.toggle("disabled", isEmpty);
+  btnUndoEl.textContent = isEmpty
+    ? "Nothing to undo"
+    : `Undo (${undoHistory.length})`;
+};
+
+const pushToUndoHistory = (action) => {
+  undoHistory.push(action);
+  if (undoHistory.length > MAX_UNDO_HISTORY) {
+    undoHistory.shift();
+  }
+  updateUndoButton();
+};
+
+const undoLastAction = () => {
+  if (undoHistory.length === 0) return;
+
+  const lastAction = undoHistory.pop();
+  const itemRef = ref(database, lastAction.path);
+
+  if (lastAction.type === "remove") {
+    set(itemRef, lastAction.itemData);
+  } else if (lastAction.type === "decrement") {
+    update(itemRef, { amount: lastAction.previousAmount });
+  }
+
+  updateUndoButton();
+};
+
+updateUndoButton();
 
 /////////// Get values from DB ///////////
 onValue(itemsInDB, function (snapshot) {
@@ -304,6 +355,7 @@ const selectValueChangeHandler = function () {
 
 /////////// Add Event Listners ///////////
 btnAddCartEl.addEventListener("click", addCartHandler);
+btnUndoEl.addEventListener("click", undoLastAction);
 inputAddCartEl.addEventListener("keypress", function (e) {
   if (e.key === "Enter") {
     addCartHandler();
