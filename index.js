@@ -44,6 +44,7 @@ const storeArr = [
   "Saraga",
   "Kroger",
   "Menards",
+  "Costco",
 ].sort();
 createSelectOptions(storeArr, selectStoreEl);
 
@@ -55,7 +56,6 @@ const itemTypes = [
   "Refridge",
   "Frozen",
   "Beverage",
-  "Other",
 ];
 createSelectOptions(itemTypes, selectTypeEl, true);
 
